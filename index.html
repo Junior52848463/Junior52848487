@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Página Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap');
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            /* Fondo con collage de portadas de películas difuminadas */
+            background: linear-gradient(120deg, #141414 80%, #222 100%), url('https://raw.githubusercontent.com/juancarlospaco/netflix-mosaic/main/netflix-mosaic-blur.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+        }
+        header {
+            background: #141414;
+            color: #e50914;
+            padding: 24px 0 12px 0;
+            text-align: left;
+            box-shadow: 0 2px 8px #0008;
+        }
+        .titulo-pelicula {
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            font-size: 2rem;
+            background: none;
+            color: #e50914;
+            display: inline-block;
+            padding: 0 32px;
+            border-radius: 0;
+            margin: 0 0 0 32px;
+            box-shadow: none;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            padding: 8px 36px 8px 12px;
+            border-radius: 20px;
+            border: none;
+            background: #222;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+        .icon-search {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+        .menu-categorias {
+            position: relative;
+        }
+        .icon-menu {
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .icon-menu:hover {
+            background: #222;
+        }
+        .categorias-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 36px;
+            background: #181818;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px #0008;
+            min-width: 160px;
+            z-index: 100;
+            flex-direction: column;
+        }
+        .categorias-dropdown a {
+            color: #fff;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #222;
+            transition: background 0.2s;
+        }
+        .categorias-dropdown a:last-child {
+            border-bottom: none;
+        }
+        .categorias-dropdown a:hover {
+            background: #e50914;
+            color: #fff;
+        }
+        .menu-categorias.open .categorias-dropdown {
+            display: flex;
+        }
+        main {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+        .galeria-peliculas {
+            max-width: 1200px;
+            margin: 48px auto 0 auto;
+        }
+        .galeria-peliculas h2 {
+            color: #e50914;
+            text-align: left;
+            margin: 0 0 24px 32px;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+        .galeria-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: flex-start;
+            margin-left: 32px;
+        }
+        .pelicula-item {
+            background: #181818;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0007;
+            padding: 0 0 18px 0;
+            text-align: center;
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .pelicula-item:hover {
+            transform: scale(1.07);
+            box-shadow: 0 8px 32px #e5091440;
+        }
+        .pelicula-item img {
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px #0005;
+        }
+        .btn-seleccionar {
+            background: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .btn-seleccionar:hover {
+            background: #b0060f;
+        }
+        .palta-section {
+            margin: 40px auto 0 auto;
+            max-width: 900px;
+            min-height: 250px;
+            border-radius: 16px;
+            background: url('https://img.freepik.com/vector-premium/fondo-composicion-cine-plano-dibujado-mano_98292-22570.jpg?semt=ais_hybrid&w=740') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 24px #0004;
+        }
+        .palta-content {
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            background: #141414;
+            padding: 24px 0 12px 0;
+        }
+        @media (max-width: 900px) {
+            .galeria-grid {
+                gap: 16px;
+                margin-left: 0;
+                justify-content: center;
+            }
+            .galeria-peliculas h2 {
+                margin-left: 0;
+                text-align: center;
+            }
+        }
+        @media (max-width: 700px) {
+            .galeria-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .pelicula-item {
+                width: 80vw;
+            }
+            .modal-contenido iframe {
+                height: 220px;
+            }
+        }
+        .modal-pelicula {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.85);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-contenido {
+            background: #181818;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px #000a;
+            position: relative;
+            width: 90vw;
+            max-width: 700px;
+        }
+        .modal-contenido iframe {
+            border-radius: 12px 12px 0 0;
+            display: block;
+        }
+        .cerrar-modal {
+            position: absolute;
+            top: 8px;
+            right: 18px;
+            color: #fff;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .categoria-bloque {
+            margin-bottom: 48px;
+        }
+        .categoria-bloque h2 {
+            color: #e50914;
+            margin: 0 0 18px 32px;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-align: left;
+        }
+        .nombre-pelicula {
+            display: block;
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            margin-top: 4px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .login-modal {
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(20,20,20,0.97);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-form {
+            background: #181818;
+            padding: 40px 32px 32px 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px #000a;
+            display: flex;
+            flex-direction: column;
+            min-width: 320px;
+            max-width: 90vw;
+            align-items: center;
+        }
+        .login-form h2 {
+            color: #e50914;
+            margin-bottom: 24px;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+        .login-form input {
+            width: 100%;
+            margin-bottom: 18px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: none;
+            background: #222;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .login-form button {
+            background: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        .login-form button:hover {
+            background: #b0060f;
+        }
+        .login-error {
+            color: #ff4d4d;
+            font-size: 1rem;
+            margin-top: 4px;
+            min-height: 20px;
+        }
+        .crear-cuenta-link {
+            color: #fff;
+            font-size: 1rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .crear-cuenta-link a {
+            color: #e50914;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        #registro-form {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+        <div id="login-modal" class="login-modal">
+            <form class="login-form" onsubmit="return login(event)">
+                <h2>Iniciar sesión</h2>
+                <input type="email" id="login-email" placeholder="Correo electrónico" required autocomplete="username">
+                <input type="password" id="login-password" placeholder="Contraseña" required autocomplete="current-password">
+                <button type="submit">Entrar</button>
+                <div id="login-error" class="login-error"></div>
+                <div class="crear-cuenta-link">
+                    ¿No tienes cuenta? <a href="#" onclick="mostrarRegistro();return false;">Crear cuenta</a>
+                </div>
+            </form>
+            <form id="registro-form" class="login-form" style="display:none;" onsubmit="return registrarCuenta(event)">
+                <h2>Crear cuenta</h2>
+                <input type="text" id="registro-nombre" placeholder="Nombre" required autocomplete="given-name">
+                <input type="text" id="registro-apellido" placeholder="Apellido" required autocomplete="family-name">
+                <input type="email" id="registro-email" placeholder="Correo electrónico" required autocomplete="username">
+                <input type="password" id="registro-password" placeholder="Contraseña" required autocomplete="new-password">
+                <button type="submit">Registrarse</button>
+                <div id="registro-mensaje" class="login-error"></div>
+                <div class="crear-cuenta-link">
+                    ¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin();return false;">Iniciar sesión</a>
+                </div>
+            </form>
+        </div>
+    <header>
+        <div class="header-content">
+            <h1 class="titulo-pelicula">pelicula gratis</h1>
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar..." id="busqueda">
+                    <span class="icon-search">🔍</span>
+                </div>
+                <div class="menu-categorias">
+                    <span class="icon-menu" onclick="toggleCategorias()">&#8942;</span>
+                    <div class="categorias-dropdown" id="categoriasDropdown">
+                        <a href="#">Acción</a>
+                        <a href="#">Comedia</a>
+                        <a href="#">Drama</a>
+                        <a href="#">Ciencia Ficción</a>
+                        <a href="#">Terror</a>
+                        <a href="#">Animación</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="galeria-peliculas">
+            <div class="categoria-bloque">
+                <h2>Acción</h2>
+                <div class="galeria-grid">
+                    <div class="pelicula-item">
+                        <img src="https://m.media-amazon.com/images/I/81p+xe8cbnL._AC_SY679_.jpg" alt="Inception">
+                        <span class="nombre-pelicula">Inception</span>
+                        <button class="btn-seleccionar" onclick="verPelicula('https://www.youtube.com/embed/YoHD9XEInc0')">Seleccionar</button>
+                    </div>
+                    <div class="pelicula-item">
+                        <img src="https://m.media-amazon.com/images/I/51oBxmV-dML._AC_.jpg" alt="Matrix">
+                        <span class="nombre-pelicula">Matrix</span>
+                        <button class="btn-seleccionar" onclick="verPelicula('https://www.youtube.com/embed/vKQi3bBA1y8')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="categoria-bloque">
+                <h2>Ciencia Ficción</h2>
+                <div class="galeria-grid">
+                    <div class="pelicula-item">
+                        <img src="https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg" alt="Interestelar">
+                        <span class="nombre-pelicula">Interestelar</span>
+                        <button class="btn-seleccionar" onclick="verPelicula('https://www.youtube.com/embed/zSWdZVtXT7E')">Seleccionar</button>
+                    </div>
+                    <div class="pelicula-item">
+                        <img src="https://m.media-amazon.com/images/I/51oBxmV-dML._AC_.jpg" alt="Matrix">
+                        <span class="nombre-pelicula">Matrix</span>
+                        <button class="btn-seleccionar" onclick="verPelicula('https://www.youtube.com/embed/vKQi3bBA1y8')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="categoria-bloque">
+                <h2>Drama</h2>
+                <div class="galeria-grid">
+                    <div class="pelicula-item">
+                        <img src="https://m.media-amazon.com/images/I/81A-mvlo+QL._AC_SY679_.jpg" alt="El Padrino">
+                        <span class="nombre-pelicula">El Padrino</span>
+                        <button class="btn-seleccionar" onclick="verPelicula('https://www.youtube.com/embed/sY1S34973zA')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Puedes agregar más bloques de categoría aquí -->
+        </section>
+        <div id="modal-pelicula" class="modal-pelicula" style="display:none;">
+            <div class="modal-contenido">
+                <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+                <iframe id="iframe-pelicula" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        // Inicializa EmailJS (pon tu PUBLIC_KEY aquí)
+        // emailjs.init('TU_PUBLIC_KEY');
+        function verPelicula(url) {
+            document.getElementById('iframe-pelicula').src = url;
+            document.getElementById('modal-pelicula').style.display = 'flex';
+        }
+        function cerrarModal() {
+            document.getElementById('modal-pelicula').style.display = 'none';
+            document.getElementById('iframe-pelicula').src = '';
+        }
+        // Cerrar modal al hacer click fuera del contenido
+        window.onclick = function(event) {
+            var modal = document.getElementById('modal-pelicula');
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        }
+        function toggleCategorias() {
+            var menu = document.querySelector('.menu-categorias');
+            menu.classList.toggle('open');
+        }
+        // Cierra el menú de categorías si se hace clic fuera
+        document.addEventListener('click', function(event) {
+            var menu = document.querySelector('.menu-categorias');
+            var dropdown = document.getElementById('categoriasDropdown');
+            if (!menu.contains(event.target)) {
+                menu.classList.remove('open');
+            }
+        });
+        // Filtrado por categoría
+        document.querySelectorAll('.categorias-dropdown a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                filtrarPorCategoria(this.textContent.trim());
+            });
+        });
+
+        function filtrarPorCategoria(categoria) {
+            const peliculas = document.querySelectorAll('.pelicula-item');
+            peliculas.forEach(function(peli) {
+                const alt = peli.querySelector('img').alt.toLowerCase();
+                // Puedes personalizar las categorías aquí
+                if (
+                    (categoria === 'Acción' && (alt.includes('inception') || alt.includes('matrix')))
+                    || (categoria === 'Ciencia Ficción' && (alt.includes('interestelar') || alt.includes('matrix')))
+                    || (categoria === 'Drama' && alt.includes('el padrino'))
+                    || (categoria === 'Comedia' && alt.includes('comedia'))
+                    || (categoria === 'Terror' && alt.includes('terror'))
+                    || (categoria === 'Animación' && alt.includes('animación'))
+                ) {
+                    peli.style.display = '';
+                } else {
+                    peli.style.display = 'none';
+                }
+            });
+        }
+
+        // Buscador por texto
+        document.getElementById('busqueda').addEventListener('input', function() {
+            const valor = this.value.trim().toLowerCase();
+            const peliculas = document.querySelectorAll('.pelicula-item');
+            peliculas.forEach(function(peli) {
+                const alt = peli.querySelector('img').alt.toLowerCase();
+                if (alt.includes(valor)) {
+                    peli.style.display = '';
+                } else {
+                    peli.style.display = 'none';
+                }
+            });
+        });
+        // Login estilo Netflix
+        function login(event) {
+            event.preventDefault();
+            var email = document.getElementById('login-email').value.trim();
+            var pass = document.getElementById('login-password').value;
+            var error = document.getElementById('login-error');
+            if(email.toLowerCase() === 'ja3077206@gmail.com' && pass === 'yunito2004') {
+                document.getElementById('login-modal').style.display = 'none';
+                error.textContent = '';
+            } else {
+                error.textContent = 'Correo o contraseña incorrectos';
+            }
+            return false;
+        }
+        function mostrarRegistro() {
+            document.querySelector('.login-form').style.display = 'none';
+            document.getElementById('registro-form').style.display = 'flex';
+        }
+        function mostrarLogin() {
+            document.querySelector('.login-form').style.display = 'flex';
+            document.getElementById('registro-form').style.display = 'none';
+        }
+        function registrarCuenta(event) {
+            event.preventDefault();
+            var nombre = document.getElementById('registro-nombre').value.trim();
+            var apellido = document.getElementById('registro-apellido').value.trim();
+            var email = document.getElementById('registro-email').value.trim();
+            var pass = document.getElementById('registro-password').value;
+            var mensaje = document.getElementById('registro-mensaje');
+            mensaje.textContent = 'Cuenta creada. Espera la aprobación del administrador para poder ingresar.';
+            // --- INTEGRACIÓN EMAILJS REAL ---
+            var SERVICE_ID = 'TU_SERVICE_ID';
+            var TEMPLATE_ID = 'TU_TEMPLATE_ID';
+            var PUBLIC_KEY = 'TU_PUBLIC_KEY';
+            var ADMIN_EMAIL = 'ja3077206@gmail.com';
+            if(typeof emailjs !== 'undefined') {
+                emailjs.init(PUBLIC_KEY);
+                emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+                    user_nombre: nombre,
+                    user_apellido: apellido,
+                    user_email: email,
+                    user_password: pass,
+                    admin_email: ADMIN_EMAIL
+                }).then(function(response) {
+                    mensaje.textContent = 'Cuenta creada. El administrador ha sido notificado.';
+                }, function(error) {
+                    mensaje.textContent = 'Error al notificar al administrador. Intenta de nuevo.';
+                });
+            }
+            setTimeout(function(){
+                mensaje.textContent = 'El administrador debe aprobar tu cuenta para poder ingresar.';
+            }, 3000);
+            return false;
+        }
+        // Mostrar login al cargar
+        window.onload = function() {
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+    </script>
+    <section class="palta-section">
+        <div class="palta-content">
+            <h2>Palta</h2>
+            <p>Aquí puedes poner información sobre la palta o cualquier otro contenido.</p>
+        </div>
+    </section>
+    <footer>
+        &copy; pelicula gratis 2024
+    </footer>
+</body>
+</html>
